@@ -47,20 +47,73 @@ void GetValue (int n,  list *pF) //получение элемента из сп
 /**
 	Функция удаления элемента из списка по номеру
 	*/
-void remove (int n,  list *&pF) //удаление элемента из списка по номеру
+int remove (int n,  list *&pF) //удаление элемента из списка по номеру
 	{
 		list *p = pF;
 		int i;
 		if(n>1){
-			for (i = 1; i < (n-1); i++)
+			for (i = 1; (i < (n-1)) && (p!=0); i++)
 			{
 				p = p->next;
 			}
-			p->next = p->next->next;
-		}else{
-			pF=pF->next;
+			if (p!=0)
+			{
+				p->next = p->next->next;
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			if (pF!=0)
+			{
+				pF=pF->next;
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
 		}
 	}
+
+/**
+	Функция добавление элемента в список по номеру
+	*/
+int add (int n, int x,  list *&pF) //удаление элемента из списка по номеру
+	{
+		list *p = pF;
+		int i;
+		if(n>1)
+		{
+			for (i = 1; (i < (n-1)) && (p!=0); i++)
+			{
+				p = p->next;
+			}
+			if (p!=0)
+			{
+				list *newP = new list; //создаем новый элемент
+				newP->value = x; //заполняем его.
+				newP->next=p->next; //Заполняем его 
+				p->next = newP;
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			InsertHead(x, pF);
+			return 0;
+			
+		}
+	}
+
 
 /**
 	Функция вывода списка
@@ -70,7 +123,7 @@ void printList(list *pF) //"Список: ";
 	list *p=pF;
 	while (p)
 	{
-		cout << p->value << endl;
+		cout << p->value<< " ";
 		p = p->next;
 	}
 	cout<<"\n";
@@ -82,27 +135,37 @@ int main()
 
 	list *pFirst = NULL; //указатель на начало списка
 	list *p; //указатель на список
-	int n = 5; //кол-во элементов в списке
+	int n = 0; //кол-во операций
+	cin >> n;
+
 	int data;
+	int num;
+	char op;
 	for (int i = 0; i < n; i++) //изначально, заполним список
-	{
-		cin >> data;
-		InsertHead(data,  pFirst);
+	{	
+		cin >> op;
+		if(op=='a')
+		{
+			cin >> num;
+			cin >> data;
+			if(	add(num, data, pFirst)<0)
+			{
+				cout << "Oshibka dobavlenia! Neverniy nomer!";
+			}
+		}
+		else
+		if(op=='d')
+		{
+			cin >> num;
+			if(	remove(num,  pFirst)<0)
+			{
+				cout << "Neverniy nomer!";
+			}
+		}
+		
+		
 	}
 
-	//Выводим список
-	printList(pFirst);
-	//Выводим значение элемента из списка
-	int m;
-//	cout <<"Введите номер элемента в списке:";
-	cin >> m;
-	GetValue(m, pFirst);
-
-	//Удаляем значение из списка
-	int k;
-//	cout <<"Введите номер элемента, который вы хотите удалить: ";
-	cin >> k;
-	remove(k, pFirst);  
 	printList(pFirst);
 	getchar();
 	getchar();
